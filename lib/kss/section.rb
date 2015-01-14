@@ -1,4 +1,8 @@
 module Kss
+
+  class SectionNotDefinedError < StandardError
+  end
+
   # Public: Represents a styleguide section. Each section describes one UI
   # element. A Section can be thought of as the collection of the description,
   # modifiers, and styleguide reference.
@@ -35,7 +39,14 @@ module Kss
       return @section unless @section.nil?
 
       cleaned  = section_comment.strip.sub(/\.$/, '') # Kill trailing period
-      @section = cleaned.match(/Styleguide (.+)/i)[1]
+      match_result = cleaned.match(/Styleguide (.+)/i)
+
+      if match_result
+        @section = match_result[1]
+      else
+        raise SectionNotDefinedError.new,
+          'No section string found in comment block.'
+      end
 
       @section
     end

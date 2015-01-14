@@ -39,6 +39,12 @@ comment
     assert_equal '2.1.1', @section.section
   end
 
+  test "raises an error if styleguide reference is not set" do
+    assert_raises Kss::SectionNotDefinedError do
+      Kss::Section.new('', 'example.css').section
+    end
+  end
+
   test "parses word phrases as styleguide references" do
     @comment_text.gsub!('2.1.1', 'Buttons - Truly Lime')
     section = Kss::Section.new(@comment_text, 'example.css')
